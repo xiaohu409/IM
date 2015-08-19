@@ -14,14 +14,11 @@ import android.widget.Button;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.os.AsyncTask;
-import android.widget.Toast;
 import android.content.SharedPreferences;
 
 import com.example.util.SharedPreUtil;
 import com.example.util.StringUtil;
 import com.example.util.ToastUtil;
-
-import java.util.logging.SocketHandler;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -88,7 +85,8 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected Boolean doInBackground(String... parm) {
             Boolean result = false;
-            result = LoginXmpp.login(parm[0],parm[1]);
+            OpenfireUtil.connectionServer();
+            result = OpenfireUtil.login(parm[0],parm[1]);
             if (result) {
                 preferences = SharedPreUtil.getSharedPreferences(LoginActivity.this, Config.CONFIG_LOGIN.name());
                 SharedPreferences.Editor editor = preferences.edit();

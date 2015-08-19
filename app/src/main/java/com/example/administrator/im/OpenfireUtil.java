@@ -4,15 +4,13 @@
 
 package com.example.administrator.im;
 
-/**
- * Created by Administrator on 2015/8/7.
- */
-
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 
-
-public class LoginXmpp {
+/**
+ * Created by hutao on 2015/8/19.
+ */
+public class OpenfireUtil {
 
     //xmpp 服务器地址
     private static String host = "192.168.0.71";
@@ -21,7 +19,13 @@ public class LoginXmpp {
     //xmpp 服务器名称 可能是计算机名字
     private static String serviceName = "desktop-mlf2s50";
 
-    public static boolean login(String username, String password) {
+    private static XMPPTCPConnection connection;
+
+    /**
+     * 连接服务器
+     * @return
+     */
+    public static boolean connectionServer() {
         XMPPTCPConnectionConfiguration.Builder configBuilder = XMPPTCPConnectionConfiguration.builder();
         //服务器IP地址
         configBuilder.setHost(host);
@@ -36,18 +40,37 @@ public class LoginXmpp {
         //开启调试模式
         configBuilder.setDebuggerEnabled(true);
         //用户名密码
-        configBuilder.setUsernameAndPassword(username, password);
-
-        XMPPTCPConnection connection = new XMPPTCPConnection(configBuilder.build());
-
+        if (connection == null) {
+            connection = new XMPPTCPConnection(configBuilder.build());
+        }
         try {
             connection.connect();
-            connection.login();
-            return  true;
+            return true;
         }
         catch (Exception e) {
             e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     *
+     * 登陆openfire
+     * @param username
+     * @param password
+     * @return
+     */
+    public static boolean login(String username, String password) {
+        if (connection == null) {
             return  false;
+        }
+        try {
+            connection.login(username, password);
+            return true;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
     }
 }
