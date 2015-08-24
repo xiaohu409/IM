@@ -5,10 +5,18 @@
 package com.example.im;
 
 
+import android.util.Log;
+import android.widget.TextView;
+
 import com.example.util.DebugUtil;
+import com.example.util.LogUtil;
 
 import org.jivesoftware.smack.chat.Chat;
 import org.jivesoftware.smack.chat.ChatManager;
+import org.jivesoftware.smack.chat.ChatManagerListener;
+import org.jivesoftware.smack.chat.ChatMessageListener;
+import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
 import org.jivesoftware.smack.roster.RosterGroup;
@@ -55,6 +63,8 @@ public class OpenfireUtil {
         //configBuilder.setCompressionEnabled(false);
         //开启调试模式
         configBuilder.setDebuggerEnabled(true);
+      //  configBuilder.setSendPresence(true);
+
         //用户名密码
         if (connection == null) {
             connection = new XMPPTCPConnection(configBuilder.build());
@@ -110,6 +120,10 @@ public class OpenfireUtil {
         }
         try {
             connection.login(username, password);
+
+            Presence presence = new Presence(Presence.Type.available);
+            presence.setMode(Presence.Mode.chat);
+            connection.sendStanza(presence);
             return true;
         }
         catch (Exception e) {
@@ -223,7 +237,20 @@ public class OpenfireUtil {
     }
 
     /**
-     * 
+     *
+     * @return
+     */
+    public static ChatManager getChatManager() {
+        if (connection == null) {
+            return null;
+        }
+        ChatManager chatManager = ChatManager.getInstanceFor(connection);
+        return  chatManager;
+    }
+
+
+    /**
+     * 获取离线消息
      * @return
      */
     public static OfflineMessageManager getOfflineManger() {

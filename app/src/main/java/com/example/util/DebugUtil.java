@@ -15,7 +15,7 @@ public class DebugUtil  {
      * Logcat 日志
      * debug = true 输出日志 否则 不输出日志
      */
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
 
     /**
      * 输出Debug 日志
